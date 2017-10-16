@@ -392,6 +392,32 @@
         "large": "/drivers/hue_dimmer_switch/assets/images/large.jpg",
         "small": "/drivers/hue_dimmer_switch/assets/images/small.jpg"
       }
+    },
+    {
+      "id": "hue_motion_sensor",
+      "name": {
+        "nl": "Hue motion sensor (ZigBee)",
+        "en": "Hue motion sensor (ZigBee)"
+      },
+      "class": "sensor",
+      "capabilities": ["alarm_motion", "measure_battery", "measure_temperature", "measure_luminance"],
+      "zigbee": {
+        "manufacturerName": "Philips",
+        "productId": [ "SML001" ],
+        "deviceId": 2128,
+        "profileId": 49246,
+        "learnmode": {
+          "image": "/drivers/hue_motion_sensor/assets/icon.svg",
+          "instruction": {
+            "en": "Hold the setup button on the back for at least 10 seconds until the LED is green.\n\nWarning: This will reset the motion sensor completely!",
+            "nl": "Houdt de setup knop op de achterkant voor tenminste 10 seconden ingedrukt tot de LED groen is.\n\nWaarschuwing: Dit zal de motion sensor volledig resetten!"
+          }
+        }
+      },
+      "images": {
+        "large": "/drivers/hue_motion_sensor/assets/images/large.jpg",
+        "small": "/drivers/hue_motion_sensor/assets/images/small.jpg"
+      }
     }
   ],
   "flow": {
