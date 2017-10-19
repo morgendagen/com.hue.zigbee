@@ -15,6 +15,13 @@
   "author": {
     "name": "rogro82"
   },
+  "contributors": {
+    "developers": [
+        {
+          "name": "Peder Toftegaard Olsen"
+        }
+    ]
+  },
   "images": {
     "large": "assets/images/large.jpg",
     "small": "assets/images/small.jpg"
