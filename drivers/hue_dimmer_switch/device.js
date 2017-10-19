@@ -6,6 +6,22 @@ const ZigBeeDevice = require('homey-meshdriver').ZigBeeDevice;
 class HueDimmerSwitchZigBee extends ZigBeeDevice {
 
   onMeshInit() {
+    this.printNode();
+
+    // Battery
+    let genPowerCfgEndpoint = this.getClusterEndpoint("genPowerCfg");
+    this.registerCapability("measure_battery", "genPowerCfg", {
+      getOpts: {
+          getOnStart:true
+      },
+      endpoint:genPowerCfgEndpoint
+    });
+    this.registerAttrReportListener(
+      "genPowerCfg", "batteryPercentageRemaining",
+      60, 300, 1,
+      this.onBatteryReport.bind(this),
+      genPowerCfgEndpoint
+    );
 
     this.registerReportListener('genOnOff', 'on', this.onCommandParser.bind(this));
     this.registerReportListener('genOnOff', 'onWithEffect', this.onCommandParser.bind(this));
@@ -21,6 +37,15 @@ class HueDimmerSwitchZigBee extends ZigBeeDevice {
         return callback(null, args.action === state.action);
       });
   }
+
+  onBatteryReport(value) {
+    if (value <= 200 && value !== 255) {
+        this.setCapabilityValue('measure_battery', Math.round(value / 2));
+    } else {
+        this.setCapabilityValue('measure_battery', null);
+    }
+  }
+
 
   /**
   	 * Method that handles an incoming on/onWithEffect report

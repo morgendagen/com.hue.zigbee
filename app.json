@@ -374,7 +374,7 @@
         "en": "Hue dimmer switch (ZigBee)"
       },
       "class": "sensor",
-      "capabilities": [],
+      "capabilities": ["measure_battery"],
       "zigbee": {
         "manufacturerName": "Philips",
         "productId": [ "RWL021" ],
