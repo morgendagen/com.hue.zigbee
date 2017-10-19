@@ -5,10 +5,64 @@ const ZigBeeDevice = require('homey-meshdriver').ZigBeeDevice;
 
 class HueMotionSensorZigBee extends ZigBeeDevice {
     async onMeshInit() {
-        this.registerAttrReportListener("msTemperatureMeasurement", "measuredValue", 60, 300, null, this.onTemperatureReport.bind(this), 1)
-        this.registerAttrReportListener("msOccupancySensing", "occupancy", 1, 60, null, this.onOccupancyReport.bind(this), 1)
-        this.registerAttrReportListener("genPowerCfg", "batteryPercentageRemaining", 10, 300, 1, this.onBatteryReport.bind(this), 1);
-        this.registerAttrReportListener("msIlluminanceMeasurement", "measuredValue", 10, 60, 1, this.onIlluminanceReport.bind(this), 1);
+        // Temperature
+        let msTemperatureMeasurementEndpoint = this.getClusterEndpoint("msTemperatureMeasurement");
+        this.registerCapability("measure_temperature", "msTemperatureMeasurement", {
+            getOpts: {
+                getOnStart:true
+            },
+            endpoint:msTemperatureMeasurementEndpoint
+        });
+        this.registerAttrReportListener(
+            "msTemperatureMeasurement", "measuredValue",
+            300, 600, null,
+            this.onTemperatureReport.bind(this),
+            msTemperatureMeasurementEndpoint
+        );
+        // Occupancy
+        // Polling seems to be necessary - the listener stops receiving reports after a while.
+        let msOccupancySensingEndpoint = this.getClusterEndpoint("msOccupancySensing")
+        this.registerCapability("alarm_motion", "msOccupancySensing", {
+            getOpts: {
+                getOnStart:true,
+                pollInterval:1000
+            },
+            endpoint:msOccupancySensingEndpoint
+        });
+        this.registerAttrReportListener(
+            "msOccupancySensing", "occupancy",
+            1, 60, null,
+            this.onOccupancyReport.bind(this),
+            msOccupancySensingEndpoint
+        );
+        // Battery
+        let genPowerCfgEndpoint = this.getClusterEndpoint("genPowerCfg");
+        this.registerCapability("measure_battery", "genPowerCfg", {
+            getOpts: {
+                getOnStart:true
+            },
+            endpoint:genPowerCfgEndpoint
+        });
+        this.registerAttrReportListener(
+            "genPowerCfg", "batteryPercentageRemaining",
+            60, 300, 1,
+            this.onBatteryReport.bind(this),
+            genPowerCfgEndpoint
+        );
+        // Luminance
+        let msIlluminanceMeasurementEndpoint = this.getClusterEndpoint("msIlluminanceMeasurement");
+        this.registerCapability("measure_luminance", "msIlluminanceMeasurement", {
+            getOpts: {
+                getOnStart:true
+            },
+            endpoint:msIlluminanceMeasurementEndpoint
+        });
+        this.registerAttrReportListener(
+            "msIlluminanceMeasurement", "measuredValue",
+            2, 60, 1,
+            this.onIlluminanceReport.bind(this),
+            msIlluminanceMeasurementEndpoint
+        );
     }
 
     onTemperatureReport(value) {
@@ -16,7 +70,6 @@ class HueMotionSensorZigBee extends ZigBeeDevice {
     }
 
     onOccupancyReport(value) {
-        //console.log("onOccupancyReport="+value);
         this.setCapabilityValue('alarm_motion', value==1);
     }
 
