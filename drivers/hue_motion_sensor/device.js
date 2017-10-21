@@ -21,11 +21,11 @@ class HueMotionSensorZigBee extends ZigBeeDevice {
         );
         // Occupancy
         // Polling seems to be necessary - the listener stops receiving reports after a while.
+        // ,pollInterval:1000
         let msOccupancySensingEndpoint = this.getClusterEndpoint("msOccupancySensing")
         this.registerCapability("alarm_motion", "msOccupancySensing", {
             getOpts: {
-                getOnStart:true,
-                pollInterval:1000
+                getOnStart:true
             },
             endpoint:msOccupancySensingEndpoint
         });
