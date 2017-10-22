@@ -80,7 +80,13 @@ class HueMotionSensorZigBee extends ZigBeeDevice {
     }
 
     onIlluminanceReport(value) {
-        this.setCapabilityValue("measure_luminance", Math.round(Math.pow(10, (value - 1) / 10000)));
+        if (value === 0) {
+            this.setCapabilityValue("measure_luminance", 0);
+        } else if (value === 0xffff) {
+            this.setCapabilityValue("measure_luminance", null);
+        } else {
+            this.setCapabilityValue("measure_luminance", Math.round(Math.pow(10, (value - 1) / 10000)));
+        }
     }
 }
 
