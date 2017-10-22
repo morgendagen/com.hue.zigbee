@@ -6,8 +6,6 @@ const ZigBeeDevice = require('homey-meshdriver').ZigBeeDevice;
 class HueDimmerSwitchZigBee extends ZigBeeDevice {
 
   onMeshInit() {
-    this.printNode();
-
     // Battery
     let genPowerCfgEndpoint = this.getClusterEndpoint("genPowerCfg");
     this.registerCapability("measure_battery", "genPowerCfg", {
